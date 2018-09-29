@@ -2,9 +2,6 @@ import sys
 import time
 import pygame
 import RPi.GPIO as gpio
-import random
-from control_device.ultra_sensor import distance
-
 
 class Drive_commend():
     
@@ -68,19 +65,23 @@ class Drive_commend():
         gpio.output(self.L_reverse, True)
         print("car is turning reverse_right")
     
-    def turn_right(self):
+    def turn_right(self, tf = 0):
         self.stop()
         time.sleep(self.timeDelay)
         gpio.output(self.L_forward, True)
         gpio.output(self.R_reverse, True)
         print("car is turning right")
+        time.sleep(tf)
+        self.stop()
         
-    def turn_left(self):
+    def turn_left(self, tf = 0):
         self.stop()
         time.sleep(self.timeDelay)
         gpio.output(self.L_reverse, True)
         gpio.output(self.R_forward, True)
         print("car is turning left")
+        time.sleep(tf)
+        self.stop()
         
     def control_wheel(self):
         
@@ -281,61 +282,5 @@ class Drive_panel():
         self.control_wheel()        
         
 if __name__ == "__main__":
-    #drive = Drive_panel()
-    drive = Drive_commend()
-    drive.main()
-
-
-def check_front():
-    init()
-    dist = distance()
-
-    curDis = distance("cm")
-    print("curdis", curDIs)
-
-
-    if dist < 15:
-        print("too close, distance")
-        init()
-        reverse(2)
-        dist = distance()
-        if dist < 15:
-            print("Too close")
-            init()
-            pivot_left(3)
-            init()
-            reverse(2)
-            dist = distance()
-            if dist < 15:
-                print("too close")
-                sys.exit()
-
-def automony():
-    tf = 0.030
-    x = random.randrange(0, 4)
-    if x == 0:
-        for y in range(30):
-            check_front()
-            init()
-            forward(tf)
-    elif x == 1:
-        for y in range(30):
-            check_front()
-            init()
-            pivot_left(tf)
-    elif x == 2:
-        for y in range(30):
-            check_front()
-            init()
-            turn_right(tf)
-    elif x == 3:
-        for y in range(30):
-            check_front()
-            init()
-            turn_left(tf)
-
-for z in range(10):
-    automony()
-
-
+    pass
 

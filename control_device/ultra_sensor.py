@@ -1,29 +1,33 @@
 import RPi.GPIO as gpio
 import time
 
-def distance(measure = "cm"):
-    gpio.setmode(gpio.BOARD)
-    gpio.setup(12, gpio.OUT)
-    gpio.setup(16, gpio.IN)
+class ultra_sensor():
 
-    gpio.output(12, False)
-    while gpio.input(16) == 0:
-        nosig = time.time()
+    eco_send_pin = 12
+    eco_receive_pin = 16
 
-    while gpio.intput(16) == 1:
-        sig = time.time()
+    def __init__(self):
+        gpio.setmode(gpio.BCM)
+        gpio.setup(self.eco_send_pin, gpio.OUT)
+        gpio.setup(self.eco_receive_pin, gpio.IN)
 
-    t1 = sig - nosig
+        gpio.output(self.eco_send_pin, False)
 
-    if measure == "cm":
-        distance = t1 / 0.000058
-    elif measure == "in":
-        distance = t1 / 0.000148
-    else:
-        print("impreper choice mease")
-        distance = None
+    def distance(self, measure = "cm"):
+        while gpio.input(self.eco_receive_pin) == 0:
+            nosig = time.time()
 
-    gpio.cleanup()
-    return distance
+        while gpio.intput(self.eco_receive_pin) == 1:
+            sig = time.time()
 
-print(distance("cm"))
+        t1 = sig - nosig
+
+        if measure == "cm":
+            distance = t1 / 0.000058
+        elif measure == "in":
+            distance = t1 / 0.000148
+        else:
+            print("impreper choice mease")
+            distance = None
+
+        return distance
